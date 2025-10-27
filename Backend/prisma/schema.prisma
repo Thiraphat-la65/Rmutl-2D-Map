@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      String   @default("user")
+  createdAt DateTime @default(now())
+  logs      Log[]
+}
+
+model Log {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  actionType   String
+  actionDetails String?
+  isSuccess    Boolean  @default(true)
+  timestamp    DateTime @default(now())
+  device       String?
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model SpatialData {
+  id          Int      @id @default(autoincrement())
+  name        String
+  category    String
+  description String?
+  group       String? 
+  wfsGetUrl   String? 
+  wfsPostUrl  String? 
+  createdAt   DateTime @default(now())
+}

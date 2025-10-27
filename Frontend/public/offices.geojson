@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.1935, 16.7425] },
+      "properties": { 
+        "name": "สำนักงานอธิการบดี", 
+        "description": "สำนักงานอธิการบดี มหาวิทยาลัยนเรศวร ดูแลการบริหารมหาวิทยาลัย", 
+        "image": "/assets/images/สำนักงานอธิการบดี.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.1950, 16.7440] },
+      "properties": { 
+        "name": "สำนักทะเบียนและประมวลผล", 
+        "description": "สำนักทะเบียนและประมวลผล มหาวิทยาลัยนเรศวร จัดการข้อมูลนักศึกษาและการลงทะเบียน", 
+        "image": "/assets/images/สำนักทะเบียนและประมวลผล.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.1920, 16.7460] },
+      "properties": { 
+        "name": "สำนักงานการเงิน", 
+        "description": "สำนักงานการเงิน มหาวิทยาลัยนเรศวร ดูแลการเงินและงบประมาณ", 
+        "image": "/assets/images/สำนักงานการเงิน.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.19642754149343, 16.743125020967508] },
+      "properties": { 
+        "name": "สถานภูมิภาคเทคโนโลยีอวกาศและภูมิสารสนเทศภาคเหนือตอนล่าง มหาวิทยาลัยนเรศวร", 
+        "description": "สถานภูมิภาคเทคโนโลยีอวกาศและภูมิสารสนเทศภาคเหนือตอนล่าง ฝึกอบรม / ให้ความรู้ด้าน GIS, Drone, Web Development, Mobile App, Open Source ฯลฯ", 
+        "image": "/assets/images/gis nu.jpg" 
+      }
+    }
+  ]
+}

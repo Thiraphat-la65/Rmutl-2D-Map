@@ -1,0 +1,40 @@
+
+services: 
+  scanner:
+    container_name: sonar-scanner
+    image: sonarsource/sonar-scanner-cli:latest
+    platform: linux/amd64
+    volumes:
+      - .:/usr/src
+    working_dir: /usr/src 
+    environment:
+      - SONAR_HOST_URL=${SONAR_HOST_URL}
+      - SONAR_TOKEN=${SONAR_TOKEN}
+      - SONAR_PROJECT_KEY=${SONAR_PROJECT_KEY}
+      - SONAR_PROJECT_NAME=${SONAR_PROJECT_NAME}
+      - SONAR_PROJECT_VERSION=${SONAR_PROJECT_VERSION}
+      - SONAR_SOURCES=${SONAR_SOURCES}
+      - SONAR_LANGUAGE=${SONAR_LANGUAGE}
+    command: >
+      sh -c "
+        if [ ! -f sonar-project.properties ]; then
+          echo 'Creating sonar-project.properties...';
+          printf '%s\n' \
+            'sonar.projectKey=$SONAR_PROJECT_KEY' \
+            'sonar.projectName=$SONAR_PROJECT_NAME' \
+            'sonar.projectVersion=$SONAR_PROJECT_VERSION' \
+            'sonar.sources=$SONAR_SOURCES' \
+            'sonar.host.url=$SONAR_HOST_URL' \
+            'sonar.language=$SONAR_LANGUAGE' \
+            > sonar-project.properties;
+        fi &&
+        sonar-scanner
+      "
+    networks:
+      - security-network
+    profiles:
+      - scanner
+
+networks:
+  security-network:
+    external: true

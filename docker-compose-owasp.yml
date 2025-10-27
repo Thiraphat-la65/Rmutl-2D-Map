@@ -1,0 +1,24 @@
+
+services:
+  dependency-check:
+    image: owasp/dependency-check:latest
+    volumes:
+      - .:/src:ro
+      - ./reports:/report
+      - dependency_check_data:/usr/share/dependency-check/data
+    command: [
+      "--scan", "/src", 
+      "--format", "HTML", 
+      "--format", "JSON",
+      "--out", "/report",
+      "--project", "gistnu-template-react"
+    ]
+    networks:
+      - security-network
+
+volumes:
+  dependency_check_data:
+
+networks:
+  security-network:
+    driver: bridge

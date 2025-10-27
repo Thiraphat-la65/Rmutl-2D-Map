@@ -1,0 +1,131 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.19419317984547, 16.741972346301072] },
+      "properties": { 
+        "name": "คณะวิทยาศาสตร์", 
+        "description": "คณะวิทยาศาสตร์ มหาวิทยาลัยนเรศวร เปิดสอนสาขาวิชาเคมี ฟิสิกส์ ชีววิทยา และวิทยาศาสตร์ข้อมูล", 
+        "image": "/assets/images/คณะวิทยาศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.19653188680725, 16.743946538274194] },
+      "properties": { 
+        "name": "คณะวิศวกรรมศาสตร์", 
+        "description": "คณะวิศวกรรมศาสตร์ มหาวิทยาลัยนเรศวร เปิดสอนสาขาวิศวกรรมเครื่องกล ไฟฟ้า และโยธา", 
+        "image": "/assets/images/คณะวิศวกรรมศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.19662367301052, 16.748774331970207] },
+      "properties": { 
+        "name": "คณะบริหารธุรกิจ", 
+        "description": "คณะบริหารธุรกิจ มหาวิทยาลัยนเรศวร เน้นการจัดการ การเงิน และการตลาด", 
+        "image": "/assets/images/คณะบริหารธุรกิจ.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.1942390458473, 16.749146156601935] },
+      "properties": { 
+        "name": "คณะมนุษยศาสตร์", 
+        "description": "คณะมนุษยศาสตร์ มหาวิทยาลัยนเรศวร สอนภาษา วรรณคดี และวัฒนธรรม", 
+        "image": "/assets/images/คณะมนุษยศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.19419649700401, 16.747358790195925] },
+      "properties": { 
+        "name": "คณะศึกษาศาสตร์", 
+        "description": "คณะศึกษาศาสตร์ มหาวิทยาลัยนเรศวร อบรมครูและพัฒนาการศึกษา", 
+        "image": "/assets/images/คณะศึกษาศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.19133274150184, 16.745831655563915] },
+      "properties": { 
+        "name": "คณะวิทยาศาสตร์การแพทย์", 
+        "description": "คณะวิทยาศาสตร์การแพทย์ มหาวิทยาลัยนเรศวร เน้นเทคนิคการแพทย์และวิทยาศาสตร์สุขภาพ", 
+        "image": "/assets/images/คณะวิทยาศาสตร์การแพทย์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.19613952559605, 16.748841110969323] },
+      "properties": { 
+        "name": "คณะนิติศาสตร์", 
+        "description": "คณะนิติศาสตร์ มหาวิทยาลัยนเรศวร สอนกฎหมายแพ่งและพาณิชย์", 
+        "image": "/assets/images/คณะนิติศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.18949103334644, 16.745432894351335] },
+      "properties": { 
+        "name": "คณะพยาบาลศาสตร์", 
+        "description": "คณะพยาบาลศาสตร์ มหาวิทยาลัยนเรศวร ฝึกอบรมพยาบาลและการดูแลสุขภาพ", 
+        "image": "/assets/images/คณะพยาบาลศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.18939049192214, 16.746540564651248] },
+      "properties": { 
+        "name": "คณะทันตแพทยศาสตร์", 
+        "description": "คณะทันตแพทยศาสตร์ มหาวิทยาลัยนเรศวร สอนทันตกรรมและสุขภาพช่องปาก", 
+        "image": "/assets/images/คณะทันตแพทยศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.18908652254275, 16.748560169683362] },
+      "properties": { 
+        "name": "คณะแพทยศาสตร์", 
+        "description": "คณะแพทยศาสตร์ มหาวิทยาลัยนเรศวร ฝึกอบรมแพทย์และการวิจัยทางการแพทย์", 
+        "image": "/assets/images/คณะแพทศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.19602183947926, 16.746335676364748] },
+      "properties": { 
+        "name": "คณะเกษตรศาสตร์", 
+        "description": "คณะเกษตรศาสตร์ มหาวิทยาลัยนเรศวร เน้นการเกษตรและเทคโนโลยีการเพาะปลูก", 
+        "image": "/assets/images/คณะเกษตรศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.1947071702045, 16.74618861249568] },
+      "properties": { 
+        "name": "คณะสถาปัตยกรรมศาสตร์", 
+        "description": "คณะสถาปัตยกรรมศาสตร์ มหาวิทยาลัยนเรศวร สอนการออกแบบอาคารและผังเมือง", 
+        "image": "/assets/images/คณะสถาปัตยกรรมศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.19638314375086, 16.748998956022902] },
+      "properties": { 
+        "name": "คณะสังคมศาสตร์", 
+        "description": "คณะสังคมศาสตร์ มหาวิทยาลัยนเรศวร สอนสังคมวิทยาและมานุษยวิทยา", 
+        "image": "/assets/images/คณะสังคมศาสตร์.jpg" 
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": { "type": "Point", "coordinates": [100.18927643030128, 16.74590889635722] },
+      "properties": { 
+        "name": "คณะสหเวชศาสตร์", 
+        "description": "คณะสหเวชศาสตร์ มหาวิทยาลัยนเรศวร เน้นสหเวชศาสตร์และการแพทย์ทางเลือก", 
+        "image": "/assets/images/คณะสหเวชศาสตร์.jpg" 
+      }
+    }
+  ]
+}
