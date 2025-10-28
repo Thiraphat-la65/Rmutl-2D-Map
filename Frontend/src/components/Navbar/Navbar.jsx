@@ -1,127 +1,166 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { FaBars, FaMap, FaHome, FaEnvelope, FaSignInAlt, FaUserPlus, FaSignOutAlt, FaShieldAlt } from 'react-icons/fa';
+// src/components/Navbar.jsx
+import { useState, useEffect } from 'react';
+import { Menu, X, LogIn, UserPlus, Globe } from 'lucide-react';
+// ใช้โลโก้จาก public (ไม่ต้อง import)
+const logoUrl = '/assets/images/rmutl-logo.png'; // วางไฟล์ใน public/assets/images/
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
-  const userRole = localStorage.getItem('userRole');
+  const [scrolled, setScrolled] = useState(false);
+  const [lang, setLang] = useState('th');
 
-  const toggleMenu = () => setIsOpen(!isOpen);
-  const closeMenu = () => setIsOpen(false);
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('userId');
-    navigate('/login');
+  const scrollTo = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setIsOpen(false);
   };
 
+  const t = lang === 'th' ? th : en;
+
   return (
-    <nav className="bg-gradient-to-r from-orange-700 to-orange-500 p-4 shadow-xl sticky top-0 z-50">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="text-white text-2xl font-bold tracking-wide flex items-center space-x-3">
-          <Link to="/" className="flex items-center space-x-2 hover:opacity-90 transition duration-300">
-            <img src="/assets/images/nu_logo.png" className="h-10 w-auto" alt="Logo" />
-            <span className="tracking-widest">NU GIS</span>
-          </Link>
-        </div>
-        <div className="hidden md:flex space-x-4 items-center" id="nav-menu">
-          <Link to="/" className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full shadow-md transition duration-300 ease-in-out flex items-center space-x-2 hover:shadow-lg">
-            <FaHome />
-            <span className="font-medium">หน้าหลัก</span>
-          </Link>
-          <Link to="/map" className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full shadow-md transition duration-300 ease-in-out flex items-center space-x-2 hover:shadow-lg">
-            <FaMap />
-            <span className="font-medium">แผนที่</span>
-          </Link>
-          <Link to="/contact" className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full shadow-md transition duration-300 ease-in-out flex items-center space-x-2 hover:shadow-lg">
-            <FaEnvelope />
-            <span className="font-medium">ช่องทางการติดต่อ</span>
-          </Link>
-          {userRole && (
-            <>
-              <button onClick={handleLogout} className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full shadow-md transition duration-300 ease-in-out flex items-center space-x-2 hover:shadow-lg">
-                <FaSignOutAlt />
-                <span className="font-medium">ออกจากระบบ</span>
-              </button>
-              {userRole === 'admin' && (
-                <Link to="/dashboard" className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full shadow-md transition duration-300 ease-in-out flex items-center space-x-2 hover:shadow-lg">
-                  <FaShieldAlt />
-                  <span className="font-medium">ผู้ดูแลระบบ</span>
-                </Link>
-              )}
-            </>
-          )}
-          {!userRole && (
-            <>
-              <Link to="/login" className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full shadow-md transition duration-300 ease-in-out flex items-center space-x-2 hover:shadow-lg">
-                <FaSignInAlt />
-                <span className="font-medium">เข้าสู่ระบบ</span>
-              </Link>
-              <Link to="/register" className="text-white bg-orange-500 hover:bg-orange-600 px-4 py-2 rounded-full shadow-md transition duration-300 ease-in-out flex items-center space-x-2 hover:shadow-lg">
-                <FaUserPlus />
-                <span className="font-medium">สมัครสมาชิก</span>
-              </Link>
-            </>
-          )}
-        </div>
-        <button onClick={toggleMenu} className="md:hidden text-white focus:outline-none focus:ring-2 focus:ring-orange-300 rounded-lg p-2 hover:bg-orange-600 transition duration-300">
-          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-          </svg>
-        </button>
-      </div>
-      <div className={`${isOpen ? 'block' : 'hidden'} md:hidden bg-orange-600 bg-opacity-95 p-4 mt-2 rounded-b-lg shadow-xl`}>
-        <div className="space-y-2">
-          <Link to="/" onClick={closeMenu} className="block text-white bg-orange-500 hover:bg-orange-600 py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center space-x-3 hover:shadow-lg">
-            <FaHome />
-            <span className="font-medium">หน้าหลัก</span>
-          </Link>
-          <Link to="/map" onClick={closeMenu} className="block text-white bg-orange-500 hover:bg-orange-600 py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center space-x-3 hover:shadow-lg">
-            <FaMap />
-            <span className="font-medium">แผนที่</span>
-          </Link>
-          <Link to="/contact" onClick={closeMenu} className="block text-white bg-orange-500 hover:bg-orange-600 py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center space-x-3 hover:shadow-lg">
-            <FaEnvelope />
-            <span className="font-medium">ช่องทางการติดต่อ</span>
-          </Link>
-          {userRole ? (
-            <>
+    <>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled 
+          ? 'bg-white shadow-xl border-b border-gray-200' 
+          : 'bg-gray-900 shadow-2xl'
+      }`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+
+            {/* === โลโก้จริง RMUTL === */}
+            <div 
+              onClick={() => scrollTo('home')} 
+              className="flex items-center space-x-3 cursor-pointer"
+            >
+              <img 
+                src={"/public/assets/images/rmutl-logo.png"} 
+                alt="RMUTL Logo" 
+                className="h-11 w-auto object-contain"
+              />
+            </div>
+
+            {/* Desktop Menu */}
+            <div className="hidden lg:flex items-center space-x-6">
+              {t.menu.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollTo(item.id)}
+                  className={`font-semibold text-sm px-4 py-2 rounded-lg transition-all ${
+                    scrolled 
+                      ? 'text-gray-800 hover:bg-gray-100' 
+                      : 'text-white hover:bg-white/10'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+
+              <div className="flex items-center space-x-3 ml-4">
+                <button className={`flex items-center space-x-2 px-5 py-2 rounded-full font-medium text-sm transition-all ${
+                  scrolled
+                    ? 'bg-[#00843D] text-white hover:bg-[#006400]'
+                    : 'bg-white text-[#00843D] hover:bg-gray-100'
+                }`}>
+                  <LogIn size={16} />
+                  <span>{t.login}</span>
+                </button>
+                <button className={`flex items-center space-x-2 px-5 py-2 rounded-full font-medium text-sm border-2 transition-all ${
+                  scrolled
+                    ? 'border-[#00843D] text-[#00843D] hover:bg-[#00843D] hover:text-white'
+                    : 'border-white text-white hover:bg-white/20'
+                }`}>
+                  <UserPlus size={16} />
+                  <span>{t.register}</span>
+                </button>
+              </div>
+
               <button
-                onClick={() => {
-                  handleLogout();
-                  closeMenu();
-                }}
-                className="block text-white bg-orange-500 hover:bg-orange-600 py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center space-x-3 w-full text-left hover:shadow-lg"
+                onClick={() => setLang(lang === 'th' ? 'en' : 'th')}
+                className={`p-2 rounded-full transition-all ${
+                  scrolled ? 'hover:bg-gray-100' : 'hover:bg-white/10'
+                }`}
               >
-                <FaSignOutAlt />
-                <span className="font-medium">ออกจากระบบ</span>
+                <Globe size={20} className={scrolled ? 'text-gray-700' : 'text-white'} />
               </button>
-              {userRole === 'admin' && (
-                <Link to="/dashboard" onClick={closeMenu} className="block text-white bg-orange-500 hover:bg-orange-600 py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center space-x-3 hover:shadow-lg">
-                  <FaShieldAlt />
-                  <span className="font-medium">ผู้ดูแลระบบ</span>
-                </Link>
-              )}
-            </>
-          ) : (
-            <>
-              <Link to="/login" onClick={closeMenu} className="block text-white bg-orange-500 hover:bg-orange-600 py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center space-x-3 hover:shadow-lg">
-                <FaSignInAlt />
-                <span className="font-medium">เข้าสู่ระบบ</span>
-              </Link>
-              <Link to="/register" onClick={closeMenu} className="block text-white bg-orange-500 hover:bg-orange-600 py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center space-x-3 hover:shadow-lg">
-                <FaUserPlus />
-                <span className="font-medium">สมัครสมาชิก</span>
-              </Link>
-            </>
-          )}
+            </div>
+
+            {/* Mobile */}
+            <div className="lg:hidden flex items-center space-x-3">
+              <button
+                onClick={() => setLang(lang === 'th' ? 'en' : 'th')}
+                className="p-2"
+              >
+                <Globe size={20} className={scrolled ? 'text-gray-700' : 'text-white'} />
+              </button>
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="p-2"
+              >
+                {isOpen ? 
+                  <X size={28} className={scrolled ? 'text-gray-900' : 'text-white'} /> : 
+                  <Menu size={28} className={scrolled ? 'text-gray-900' : 'text-white'} />
+                }
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="lg:hidden fixed top-16 left-0 right-0 bg-white shadow-2xl border-t border-gray-200 z-40">
+          <div className="px-6 py-4 space-y-3">
+            {t.menu.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollTo(item.id)}
+                className="block w-full text-left text-lg font-medium text-gray-800 py-3 border-b border-gray-100"
+              >
+                {item.label}
+              </button>
+            ))}
+            <div className="pt-4 space-y-3">
+              <button className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-full bg-[#00843D] text-white font-medium">
+                <LogIn size={18} />
+                <span>{t.login}</span>
+              </button>
+              <button className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-full border-2 border-[#00843D] text-[#00843D] font-medium hover:bg-[#00843D] hover:text-white">
+                <UserPlus size={18} />
+                <span>{t.register}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
+};
+
+const th = {
+  menu: [
+    { id: 'home', label: 'หน้าแรก' },
+    { id: 'map', label: 'แผนที่' },
+    { id: 'about', label: 'เกี่ยวกับ' },
+    { id: 'contact', label: 'ติดต่อเรา' },
+  ],
+  login: 'เข้าสู่ระบบ',
+  register: 'สมัครสมาชิก',
+};
+
+const en = {
+  menu: [
+    { id: 'home', label: 'Home' },
+    { id: 'map', label: 'Map' },
+    { id: 'about', label: 'About' },
+    { id: 'contact', label: 'Contact' },
+  ],
+  login: 'Login',
+  register: 'Register',
 };
 
 export default Navbar;
