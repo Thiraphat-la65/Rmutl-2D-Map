@@ -1,11 +1,11 @@
-// src/components/Navbar.jsx
+// src/components/Navbar/Navbar.jsx
 import { useState, useEffect } from 'react';
-import { Menu, X, LogIn, UserPlus, Globe } from 'lucide-react';
-// ใช้โลโก้จาก public (ไม่ต้อง import)
-const logoUrl = '/assets/images/rmutl-logo.png'; // วางไฟล์ใน public/assets/images/
+import { Link } from 'react-router-dom';
+import { Menu, X, LogIn, UserPlus, Globe, ChevronDown } from 'lucide-react';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isMapDropdownOpen, setIsMapDropdownOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [lang, setLang] = useState('th');
 
@@ -18,6 +18,7 @@ const Navbar = () => {
   const scrollTo = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
     setIsOpen(false);
+    setIsMapDropdownOpen(false);
   };
 
   const t = lang === 'th' ? th : en;
@@ -32,13 +33,13 @@ const Navbar = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
 
-            {/* === โลโก้จริง RMUTL === */}
+            {/* โลโก้จริง */}
             <div 
               onClick={() => scrollTo('home')} 
               className="flex items-center space-x-3 cursor-pointer"
             >
               <img 
-                src={"/public/assets/images/rmutl-logo.png"} 
+                src="/assets/images/rmutl-logo.png" 
                 alt="RMUTL Logo" 
                 className="h-11 w-auto object-contain"
               />
@@ -46,20 +47,54 @@ const Navbar = () => {
 
             {/* Desktop Menu */}
             <div className="hidden lg:flex items-center space-x-6">
-              {t.menu.map((item) => (
+              {t.menu
+                .filter(item => item.id !== 'map')
+                .map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollTo(item.id)}
+                    className={`font-semibold text-sm px-4 py-2 rounded-lg transition-all ${
+                      scrolled 
+                        ? 'text-gray-800 hover:bg-gray-100' 
+                        : 'text-white hover:bg-white/10'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+
+              {/* Dropdown แผนที่ */}
+              <div className="relative">
                 <button
-                  key={item.id}
-                  onClick={() => scrollTo(item.id)}
-                  className={`font-semibold text-sm px-4 py-2 rounded-lg transition-all ${
+                  onMouseEnter={() => setIsMapDropdownOpen(true)}
+                  onClick={() => setIsMapDropdownOpen(!isMapDropdownOpen)}
+                  className={`flex items-center space-x-1 font-semibold text-sm px-4 py-2 rounded-lg transition-all ${
                     scrolled 
                       ? 'text-gray-800 hover:bg-gray-100' 
                       : 'text-white hover:bg-white/10'
                   }`}
                 >
-                  {item.label}
+                  <span>{t.mapLabel}</span>
+                  <ChevronDown size={16} className={`transition-transform ${isMapDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
-              ))}
 
+                {isMapDropdownOpen && (
+                  <div
+                    className="absolute left-0 mt-2 w-64 bg-white rounded-lg shadow-2xl border border-gray-200 py-2 z-50"
+                    onMouseLeave={() => setIsMapDropdownOpen(false)}
+                  >
+                    <Link
+                      to="/map"
+                      onClick={() => setIsMapDropdownOpen(false)}
+                      className="block w-full text-left px-5 py-3 text-gray-800 hover:bg-green-50 hover:text-[#00843D] font-medium transition-colors"
+                    >
+                      RMUTL 2D Map
+                    </Link>
+                  </div>
+                )}
+              </div>
+
+              {/* ปุ่ม เข้าสู่ระบบ / สมัครสมาชิก */}
               <div className="flex items-center space-x-3 ml-4">
                 <button className={`flex items-center space-x-2 px-5 py-2 rounded-full font-medium text-sm transition-all ${
                   scrolled
@@ -91,16 +126,10 @@ const Navbar = () => {
 
             {/* Mobile */}
             <div className="lg:hidden flex items-center space-x-3">
-              <button
-                onClick={() => setLang(lang === 'th' ? 'en' : 'th')}
-                className="p-2"
-              >
+              <button onClick={() => setLang(lang === 'th' ? 'en' : 'th')} className="p-2">
                 <Globe size={20} className={scrolled ? 'text-gray-700' : 'text-white'} />
               </button>
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="p-2"
-              >
+              <button onClick={() => setIsOpen(!isOpen)} className="p-2">
                 {isOpen ? 
                   <X size={28} className={scrolled ? 'text-gray-900' : 'text-white'} /> : 
                   <Menu size={28} className={scrolled ? 'text-gray-900' : 'text-white'} />
@@ -115,15 +144,26 @@ const Navbar = () => {
       {isOpen && (
         <div className="lg:hidden fixed top-16 left-0 right-0 bg-white shadow-2xl border-t border-gray-200 z-40">
           <div className="px-6 py-4 space-y-3">
-            {t.menu.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className="block w-full text-left text-lg font-medium text-gray-800 py-3 border-b border-gray-100"
-              >
-                {item.label}
-              </button>
-            ))}
+            {t.menu
+              .filter(item => item.id !== 'map')
+              .map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => scrollTo(item.id)}
+                  className="block w-full text-left text-lg font-medium text-gray-800 py-3 border-b border-gray-100"
+                >
+                  {item.label}
+                </button>
+              ))}
+
+            <Link
+              to="/map"
+              onClick={() => setIsOpen(false)}
+              className="block w-full text-left text-lg font-medium text-[#00843D] py-3 border-b border-gray-100"
+            >
+              {t.mapLabel} → RMUTL 2D Map
+            </Link>
+
             <div className="pt-4 space-y-3">
               <button className="w-full flex items-center justify-center space-x-2 px-6 py-3 rounded-full bg-[#00843D] text-white font-medium">
                 <LogIn size={18} />
@@ -148,6 +188,7 @@ const th = {
     { id: 'about', label: 'เกี่ยวกับ' },
     { id: 'contact', label: 'ติดต่อเรา' },
   ],
+  mapLabel: 'แผนที่',
   login: 'เข้าสู่ระบบ',
   register: 'สมัครสมาชิก',
 };
@@ -159,6 +200,7 @@ const en = {
     { id: 'about', label: 'About' },
     { id: 'contact', label: 'Contact' },
   ],
+  mapLabel: 'Map',
   login: 'Login',
   register: 'Register',
 };

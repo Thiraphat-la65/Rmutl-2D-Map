@@ -1,3 +1,4 @@
+// src/pages/InteractiveMap.jsx
 import React, { useEffect, useState, useRef } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -47,7 +48,7 @@ const InteractiveMap = () => {
         zoomControl: false,
         minZoom: 14,
         maxZoom: 19,
-      }).setView([16.748379879330376, 100.19195364351437], 15);
+      }).setView([16.862993664376827, 100.18312689977077], 16);
 
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         maxZoom: 19,
@@ -74,7 +75,6 @@ const InteractiveMap = () => {
         return layer;
       };
 
-      // ไอคอนสไตล์ Google Maps สำหรับคณะและวิทยาลัย (สีแดง)
       const facultyIcon = L.divIcon({
         html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32"><path fill="#ff4444" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>`,
         className: '',
@@ -83,7 +83,6 @@ const InteractiveMap = () => {
         popupAnchor: [0, -32],
       });
 
-      // ไอคอนสไตล์ Google Maps สำหรับสำนักงาน (สีน้ำเงิน)
       const officeIcon = L.divIcon({
         html: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="32" height="32"><path fill="#1e90ff" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>`,
         className: '',
@@ -92,7 +91,6 @@ const InteractiveMap = () => {
         popupAnchor: [0, -32],
       });
 
-      // โหลด GeoJSON สำหรับคณะและวิทยาลัย
       const fetchFacultiesGeoJSON = async () => {
         try {
           const response = await fetch('/faculties.geojson');
@@ -106,8 +104,7 @@ const InteractiveMap = () => {
                   <h3 class="text-lg font-bold text-gray-800 mb-2">${feature.properties.name}</h3>
                   <img src="${feature.properties.image || '/assets/images/placeholder.jpg'}" alt="${feature.properties.name}" class="w-full h-32 object-cover rounded-lg mb-2" onerror="this.src='/assets/images/placeholder.jpg'" />
                   <p class="text-sm text-gray-600 mb-2">${feature.properties.description || 'ไม่มีรายละเอียด'}</p>
-                  <!-- ปุ่มนำทางไปยังตำแหน่งคณะใน Google Maps -->
-                  <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank" class="inline-flex items-center px-3 py-2 text-sm font-medium text-white! bg-orange-500 rounded-lg hover:bg-orange-600 transition-colors duration-300">
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank" class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-orange-600 transition-colors duration-300">
                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                     นำทางไป${feature.properties.name}
                   </a>
@@ -122,11 +119,10 @@ const InteractiveMap = () => {
         } catch (error) {
           console.error('ข้อผิดพลาดในการดึง GeoJSON คณะและวิทยาลัย:', error.message);
           toast.error(`ไม่สามารถโหลดข้อมูลคณะและวิทยาลัยได้: ${error.message}`, { autoClose: 5000 });
-          return createWmsLayer('nu_faculties', 'คณะและวิทยาลัย'); // Fallback ไป WMS
+          return createWmsLayer('nu_faculties', 'คณะและวิทยาลัย');
         }
       };
 
-      // โหลด GeoJSON สำหรับสำนักงาน
       const fetchOfficesGeoJSON = async () => {
         try {
           const response = await fetch('/offices.geojson');
@@ -140,8 +136,7 @@ const InteractiveMap = () => {
                   <h3 class="text-lg font-bold text-gray-800 mb-2">${feature.properties.name}</h3>
                   <img src="${feature.properties.image || '/assets/images/placeholder.jpg'}" alt="${feature.properties.name}" class="w-full h-32 object-cover rounded-lg mb-2" onerror="this.src='/assets/images/placeholder.jpg'" />
                   <p class="text-sm text-gray-600 mb-2">${feature.properties.description || 'ไม่มีรายละเอียด'}</p>
-                  <!-- ปุ่มนำทางไปยังตำแหน่งสำนักงานใน Google Maps -->
-                  <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank" class="inline-flex items-center px-3 py-2 text-sm font-medium text-white! bg-orange-500 rounded-lg hover:bg-orange-600 transition-colors duration-300">
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" target="_blank" class="inline-flex items-center px-3 py-2 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-orange-600 transition-colors duration-300">
                     <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                     นำทางไป${feature.properties.name}
                   </a>
@@ -156,11 +151,10 @@ const InteractiveMap = () => {
         } catch (error) {
           console.error('ข้อผิดพลาดในการดึง GeoJSON สำนักงาน:', error.message);
           toast.error(`ไม่สามารถโหลดข้อมูลสำนักงานได้: ${error.message}`, { autoClose: 5000 });
-          return createWmsLayer('nu_offices', 'สำนักงาน'); // Fallback ไป WMS
+          return createWmsLayer('nu_offices', 'สำนักงาน');
         }
       };
 
-      // ตั้งค่าเลเยอร์ทั้งหมด
       layerRefs.current = {
         greenArea: createWmsLayer('nu_green_area', 'พื้นที่สีเขียวภายในมหาวิทยาลัยนเรศวร'),
         buildings: createWmsLayer('nu_building', 'พื้นที่สิ่งปลูกสร้าง'),
@@ -173,8 +167,8 @@ const InteractiveMap = () => {
         redRoute: createWmsLayer('nu_red_route', 'สายสีแดง'),
         blueRoute: createWmsLayer('nu_blue_route', 'สายสีน้ำเงิน'),
         parking: createWmsLayer('nu_parking', 'ที่จอดรถ'),
-        faculties: null, // จะตั้งค่าหลังดึง GeoJSON
-        offices: null, // จะตั้งค่าหลังดึง GeoJSON
+        faculties: null,
+        offices: null,
         schools: createWmsLayer('nu_schools', 'โรงเรียน'),
         atms: createWmsLayer('nu_atms', 'ตู้กดเงิน'),
         banks: createWmsLayer('nu_banks', 'ธนาคาร'),
@@ -190,7 +184,6 @@ const InteractiveMap = () => {
         safeZones: createWmsLayer('nu_safe_zones', 'โซนปลอดภัย'),
       };
 
-      // โหลด GeoJSON สำหรับคณะและวิทยาลัย
       fetchFacultiesGeoJSON().then((facultyLayer) => {
         if (facultyLayer) {
           layerRefs.current.faculties = facultyLayer;
@@ -200,7 +193,6 @@ const InteractiveMap = () => {
         }
       });
 
-      // โหลด GeoJSON สำหรับสำนักงาน
       fetchOfficesGeoJSON().then((officeLayer) => {
         if (officeLayer) {
           layerRefs.current.offices = officeLayer;
@@ -293,50 +285,50 @@ const InteractiveMap = () => {
 
   const layerGroups = {
     dataLayers: [
-      { id: 'greenArea', name: 'พื้นที่สีเขียว', icon: <FaMapMarkerAlt className="mr-2 text-orange-500" /> },
-      { id: 'buildings', name: 'พื้นที่สิ่งปลูกสร้าง', icon: <FaBuilding className="mr-2 text-orange-500" /> },
-      { id: 'roads', name: 'พื้นที่ถนน', icon: <FaRoad className="mr-2 text-orange-500" /> },
-      { id: 'waterBody', name: 'พื้นที่แหล่งน้ำ', icon: <FaWater className="mr-2 text-orange-500" /> },
+      { id: 'greenArea', name: 'พื้นที่สีเขียว', icon: <FaMapMarkerAlt className="mr-2 text-green-600" /> },
+      { id: 'buildings', name: 'พื้นที่สิ่งปลูกสร้าง', icon: <FaBuilding className="mr-2 text-green-600" /> },
+      { id: 'roads', name: 'พื้นที่ถนน', icon: <FaRoad className="mr-2 text-green-600" /> },
+      { id: 'waterBody', name: 'พื้นที่แหล่งน้ำ', icon: <FaWater className="mr-2 text-green-600" /> },
     ],
     buildingsPlaces: [
-      { id: 'faculties', name: 'คณะและวิทยาลัย', icon: <FaUniversity className="mr-2 text-orange-500" /> },
-      { id: 'offices', name: 'สำนักงาน', icon: <FaBriefcase className="mr-2 text-orange-500" /> },
-      { id: 'schools', name: 'โรงเรียน', icon: <FaSchool className="mr-2 text-orange-500" /> },
+      { id: 'faculties', name: 'คณะและวิทยาลัย', icon: <FaUniversity className="mr-2 text-green-600" /> },
+      { id: 'offices', name: 'สำนักงาน', icon: <FaBriefcase className="mr-2 text-green-600" /> },
+      { id: 'schools', name: 'โรงเรียน', icon: <FaSchool className="mr-2 text-green-600" /> },
     ],
     transportation: [
-      { id: 'universityGate', name: 'ประตูมหาวิทยาลัย', icon: <FaDoorOpen className="mr-2 text-orange-500" /> },
+      { id: 'universityGate', name: 'ประตูมหาวิทยาลัย', icon: <FaDoorOpen className="mr-2 text-green-600" /> },
       { id: 'yellowSign', name: 'ป้ายสายสีเหลือง', icon: <FaBus className="mr-2 text-yellow-500" /> },
       { id: 'yellowRoute', name: 'สายสีเหลือง', icon: <FaBus className="mr-2 text-yellow-500" /> },
       { id: 'redSign', name: 'ป้ายสายสีแดง', icon: <FaBus className="mr-2 text-red-500" /> },
       { id: 'redRoute', name: 'สายสีแดง', icon: <FaBus className="mr-2 text-red-500" /> },
       { id: 'blueRoute', name: 'สายสีน้ำเงิน', icon: <FaBus className="mr-2 text-blue-500" /> },
-      { id: 'parking', name: 'ที่จอดรถ', icon: <FaCar className="mr-2 text-gray-500" /> },
+      { id: 'parking', name: 'ที่จอดรถ', icon: <FaCar className="mr-2 text-green-600" /> },
     ],
     financial: [
-      { id: 'atms', name: 'ตู้กดเงิน', icon: <FaMoneyCheckAlt className="mr-2 text-orange-500" /> },
-      { id: 'banks', name: 'ธนาคาร', icon: <FaPiggyBank className="mr-2 text-orange-500" /> },
+      { id: 'atms', name: 'ตู้กดเงิน', icon: <FaMoneyCheckAlt className="mr-2 text-green-600" /> },
+      { id: 'banks', name: 'ธนาคาร', icon: <FaPiggyBank className="mr-2 text-green-600" /> },
     ],
     healthSports: [
-      { id: 'hospitals', name: 'โรงพยาบาล', icon: <FaHospital className="mr-2 text-orange-500" /> },
-      { id: 'sports', name: 'กิจกรรม/กีฬา', icon: <FaRunning className="mr-2 text-orange-500" /> },
+      { id: 'hospitals', name: 'โรงพยาบาล', icon: <FaHospital className="mr-2 text-green-600" /> },
+      { id: 'sports', name: 'กิจกรรม/กีฬา', icon: <FaRunning className="mr-2 text-green-600" /> },
     ],
     foodBeverage: [
-      { id: 'foodCourts', name: 'ศูนย์อาหาร', icon: <FaUtensils className="mr-2 text-orange-500" /> },
-      { id: 'coffeeShops', name: 'ร้านกาแฟ', icon: <FaCoffee className="mr-2 text-orange-500" /> },
+      { id: 'foodCourts', name: 'ศูนย์อาหาร', icon: <FaUtensils className="mr-2 text-green-600" /> },
+      { id: 'coffeeShops', name: 'ร้านกาแฟ', icon: <FaCoffee className="mr-2 text-green-600" /> },
     ],
     learningSpaces: [
-      { id: 'groupStudyRooms', name: 'ห้องค้นคว้ากลุ่ม', icon: <FaUsers className="mr-2 text-orange-500" /> },
-      { id: 'workspaces', name: 'พื้นที่ทำงาน', icon: <FaBook className="mr-2 text-orange-500" /> },
+      { id: 'groupStudyRooms', name: 'ห้องค้นคว้ากลุ่ม', icon: <FaUsers className="mr-2 text-green-600" /> },
+      { id: 'workspaces', name: 'พื้นที่ทำงาน', icon: <FaBook className="mr-2 text-green-600" /> },
     ],
     eventSpaces: [
-      { id: 'eventVenues', name: 'ที่จัดกิจกรรม', icon: <FaCalendarAlt className="mr-2 text-orange-500" /> },
-      { id: 'currentFestivals', name: 'งานเทศกาลช่วงนี้', icon: <FaCalendarAlt className="mr-2 text-orange-500" /> },
+      { id: 'eventVenues', name: 'ที่จัดกิจกรรม', icon: <FaCalendarAlt className="mr-2 text-green-600" /> },
+      { id: 'currentFestivals', name: 'งานเทศกาลช่วงนี้', icon: <FaCalendarAlt className="mr-2 text-green-600" /> },
     ],
     publicRestrooms: [
-      { id: 'publicRestrooms', name: 'ห้องน้ำสาธารณะ', icon: <FaRestroom className="mr-2 text-orange-500" /> },
+      { id: 'publicRestrooms', name: 'ห้องน้ำสาธารณะ', icon: <FaRestroom className="mr-2 text-green-600" /> },
     ],
     publicSafety: [
-      { id: 'safeZones', name: 'โซนปลอดภัย', icon: <FaShieldAlt className="mr-2 text-orange-500" /> },
+      { id: 'safeZones', name: 'โซนปลอดภัย', icon: <FaShieldAlt className="mr-2 text-green-600" /> },
     ],
   };
 
@@ -354,17 +346,18 @@ const InteractiveMap = () => {
         }
       `}</style>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar closeOnClick />
-      <div className="bg-gradient-to-r from-orange-600 to-orange-400 text-white p-4 flex justify-between items-center shadow-lg">
+      {/* แถบด้านบน – สีเขียว RMUTL */}
+      <div className="bg-gradient-to-r from-[#00843D] to-[#006400] text-white p-4 flex justify-between items-center shadow-lg">
         <div className="flex items-center space-x-3">
           <img
-            src="/assets/images/nu_logo.png"
-            alt="โลโก้มหาวิทยาลัยนเรศวร"
+            src="/assets/images/rmutl-logo.png"
+            alt="โลโก้มหาวิทยาลัยเทคโนโลยีราชมงคลล้านนา"
             className="h-10 w-auto transition-transform duration-300 hover:scale-110"
           />
-          <span className="text-2xl font-bold tracking-wide">GeoApp Naresuan</span>
+          <span className="text-2xl font-bold tracking-wide">RMUTL 2D MAP</span>
         </div>
         <button
-          className="p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-all duration-300 transform hover:scale-110"
+          className="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all duration-300 transform hover:scale-110"
           onClick={toggleSidebar}
           aria-label="สลับแถบด้านข้าง"
         >
@@ -379,13 +372,13 @@ const InteractiveMap = () => {
           style={{ zIndex: 1000 }}
         >
           <div className={`flex h-full ${isSidebarOpen ? 'block' : 'hidden'}`}>
-            <div className="w-12 bg-orange-50 flex flex-col items-center py-4 border-r border-gray-200">
+            <div className="w-12 bg-green-50 flex flex-col items-center py-4 border-r border-gray-200">
               {sections.map((section) => (
                 section.isBackButton ? (
                   <Link
                     key={section.id}
                     to="/"
-                    className="w-full p-3 text-gray-700 hover:bg-orange-100 transition-all duration-300 flex items-center justify-center hover:scale-110"
+                    className="w-full p-3 text-green-700 hover:bg-green-100 transition-all duration-300 flex items-center justify-center hover:scale-110"
                     title={section.name}
                     aria-label={`เลือก${section.name}`}
                   >
@@ -394,8 +387,8 @@ const InteractiveMap = () => {
                 ) : (
                   <button
                     key={section.id}
-                    className={`w-full p-3 text-gray-700 hover:bg-orange-100 transition-all duration-300 flex items-center justify-center hover:scale-110 ${
-                      activeSection === section.id ? 'bg-orange-400 text-white' : ''
+                    className={`w-full p-3 text-green-700 hover:bg-green-100 transition-all duration-300 flex items-center justify-center hover:scale-110 ${
+                      activeSection === section.id ? 'bg-[#00843D] text-white' : ''
                     }`}
                     onClick={() => setActiveSection(section.id)}
                     title={section.name}
@@ -406,7 +399,7 @@ const InteractiveMap = () => {
                 )
               ))}
             </div>
-            <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-b from-orange-50 to-white">
+            <div className="flex-1 p-4 overflow-y-auto bg-gradient-to-b from-green-50 to-white">
               <h3 className="text-lg font-semibold mb-4 text-center text-gray-800">
                 {sections.find((s) => s.id === activeSection)?.name}
               </h3>
@@ -414,8 +407,8 @@ const InteractiveMap = () => {
                 {layerGroups[activeSection]?.map((layer) => (
                   <li key={layer.id}>
                     <button
-                      className={`w-full flex items-center p-2 rounded-lg text-gray-700 hover:bg-orange-100 transition-all duration-300 shadow-sm ${
-                        layers[layer.id] ? 'bg-orange-200 text-gray-800' : 'bg-white'
+                      className={`w-full flex items-center p-2 rounded-lg text-gray-700 hover:bg-green-100 transition-all duration-300 shadow-sm ${
+                        layers[layer.id] ? 'bg-green-200 text-gray-800' : 'bg-white'
                       }`}
                       onClick={() => handleLayerToggle(layer.id)}
                     >
@@ -427,10 +420,10 @@ const InteractiveMap = () => {
               </ul>
               <div className="mt-6 space-y-2">
                 <button
-                  className="w-full flex items-center justify-center p-2 rounded-lg bg-orange-100 text-gray-700 hover:bg-orange-200 transition-all duration-300 shadow-sm"
+                  className="w-full flex items-center justify-center p-2 rounded-lg bg-green-100 text-gray-700 hover:bg-green-200 transition-all duration-300 shadow-sm"
                   onClick={clearFilters}
                 >
-                  <FaEraser className="mr-2 text-orange-500" />
+                  <FaEraser className="mr-2 text-green-600" />
                   เคลียร์เลเยอร์
                 </button>
               </div>
@@ -440,7 +433,7 @@ const InteractiveMap = () => {
         <div
           id="map"
           ref={mapContainerRef}
-          className="flex-1 border-2 border-orange-300 rounded-lg shadow-md hover:border-orange-500 transition-all duration-300"
+          className="flex-1 border-2 border-green-300 rounded-lg shadow-md hover:border-green-500 transition-all duration-300"
           style={{ height: 'calc(100vh - 64px)' }}
         />
       </div>
