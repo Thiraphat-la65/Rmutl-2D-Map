@@ -1,10 +1,11 @@
 // src/pages/Home.jsx
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
     <div className="h-screen overflow-y-auto snap-y snap-mandatory scroll-smooth">
-      
+
       {/* ========== SECTION 1: HERO (ข้อความเด่นด้วยเงาเข้ม + Hover ขยายเงา) ========== */}
       <section
         id="home"
@@ -15,7 +16,7 @@ const Home = () => {
           autoPlay
           muted
           loop
-        playsInline
+          playsInline
           preload="auto"
           className="absolute inset-0 w-full h-full object-cover z-0"
         >
@@ -38,7 +39,7 @@ const Home = () => {
             textShadow: '0 4px 8px rgba(0,0,0,0.8), 0 8px 16px rgba(0,0,0,0.6)'
           }}
         >
-          <h1 
+          <h1
             className="text-5xl md:text-7xl font-bold mb-3 tracking-wide"
             style={{
               filter: 'drop-shadow(0 10px 15px rgba(0,0,0,0.8))',
@@ -47,7 +48,7 @@ const Home = () => {
           >
             RMUTL MAP
           </h1>
-          <p 
+          <p
             className="text-lg md:text-2xl font-light"
             style={{
               filter: 'drop-shadow(0 6px 10px rgba(0,0,0,0.7))',
@@ -75,7 +76,7 @@ const Home = () => {
           <div className="grid md:grid-cols-2 gap-10 items-center">
             <div>
               <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-                ระบบแผนที่ดิจิทัลที่ช่วยนำทางคุณไปยังทุกอาคาร ห้องเรียน หอพัก 
+                ระบบแผนที่ดิจิทัลที่ช่วยนำทางคุณไปยังทุกอาคาร ห้องเรียน หอพัก
                 และสิ่งอำนวยความสะดวกภายในวิทยาเขตพิษณุโลก
               </p>
               <ul className="space-y-3 text-gray-600">
@@ -89,12 +90,23 @@ const Home = () => {
                   <span className="text-blue-600 mr-2">Check</span> ข้อมูลจุดจอดรถและทางเข้า
                 </li>
               </ul>
-              <button className="mt-8 bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-medium hover:bg-blue-700 transform hover:scale-105 transition duration-300">
+
+              {/* ปุ่มนี้กดแล้วไปหน้า InteractiveMap */}
+              <Link
+                to="/map"
+                className="mt-8 inline-block bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-medium hover:bg-blue-700 transform hover:scale-105 transition duration-300"
+              >
                 เปิดแผนที่เลย
-              </button>
+              </Link>
             </div>
-            <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-80 flex items-center justify-center">
-              <p className="text-gray-500 text-lg">ตัวอย่างแผนที่ (จะใส่จริงในภายหลัง)</p>
+
+            {/* ภาพแผนที่จริงที่คุณจะใส่ */}
+            <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-80 flex items-center justify-center overflow-hidden">
+              <img
+                src="/assets/images/แผนที่จริง.PNG"
+                alt="แผนที่มหาวิทยาลัยเทคโนโลยีราชมงคลล้านนา พิษณุโลก"
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              />
             </div>
           </div>
         </div>
@@ -192,7 +204,7 @@ const Home = () => {
                   <span className="mr-3">Phone</span> 055-XXXXXX
                 </p>
                 <p className="flex items-center">
-                  <span className="mr-3">Address</span> 
+                  <span className="mr-3">Address</span>
                   129 หมู่ 9 ต.ในเมือง อ.เมือง จ.พิษณุโลก 65000
                 </p>
               </div>
