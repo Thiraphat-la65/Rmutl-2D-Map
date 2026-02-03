@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { FaBars, FaMapMarkerAlt, FaBuilding, FaRoad, FaWater, FaEraser, FaArrowLeft, FaDoorOpen, FaBus, FaCar, FaUniversity, FaBriefcase, FaSchool, FaLayerGroup, FaMapSigns, FaMoneyCheckAlt, FaPiggyBank, FaHeartbeat, FaHospital, FaRunning, FaUtensils, FaCoffee, FaBook, FaUsers, FaCalendarAlt, FaRestroom, FaShieldAlt } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { IoIosWater } from "react-icons/io";
 
 const InteractiveMap = () => {
   const mapRef = useRef(null);
@@ -96,7 +97,8 @@ const InteractiveMap = () => {
           const response = await fetch('/faculties.geojson');
           if (!response.ok) throw new Error(`ข้อผิดพลาด HTTP ${response.status}`);
           const geojson = await response.json();
-          return L.geoJSON(geojson, {
+
+          const facultyLayer = L.geoJSON(geojson, {
             pointToLayer: (feature, latlng) => {
               const [lng, lat] = feature.geometry.coordinates;
               const popupContent = `
@@ -116,6 +118,83 @@ const InteractiveMap = () => {
               });
             },
           });
+
+          // เพิ่ม marker เพิ่มเติมเข้าไปใน layer เดียวกับคณะ (แสดงเฉพาะเมื่อเปิด faculties)
+          const rmutlIcon = L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="background:#00843D;color:white;width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;border:2px solid white;">R</div>',
+            iconSize: [32, 32],
+            iconAnchor: [16, 16],
+            popupAnchor: [0, -16]
+          });
+
+          const extraMarkers = [
+            {
+              lat: 16.862125295303038,
+              lng: 100.18487977177142,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/ภาพตึกพืชศาสตร์.jpg" alt="สาขาพืชศาสตร์" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">สาขาพืชศาสตร์</h3>
+                  <p class="text-sm text-gray-600 mb-2">ฝ่ายวิชาการ วิทยาเขตพิษณุโลก</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862125295303038,100.18487977177142" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            {
+              lat: 16.86396506882284,
+              lng: 100.18763199968545,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/คณะประมง.jpg" alt="สาขาประมง1" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">สาขาประมง1</h3>
+                  <p class="text-sm text-gray-600 mb-2">สำนักงานประมง</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.86396506882284,100.18763199968545" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            {
+              lat: 16.862591611196265,
+              lng: 100.18715885215336,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/ภาพตึกคณะวิท.jpg" alt="สำนักงานคณะวิทยาศาสตร์" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">สำนักงานคณะวิทยาศาสตร์</h3>
+                  <p class="text-sm text-gray-600 mb-2">ตึก 16</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862591611196265,100.18715885215336" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            {
+              lat: 16.861634985592083, 
+              lng: 100.18242070453148,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/ตึกวิทยาศาสต์.jpg" alt="ฝ่ายวิชาการ" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">คณะวิทยาศาสตร์และเทคโนโลยีการเกษตร</h3>
+                  <p class="text-sm text-gray-600 mb-2">ฝ่ายวิชาการ วิทยาเขตพิษณุโลก</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862125295303038,100.18487977177142" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            // เพิ่มจุดอื่น ๆ ได้ตามต้องการ...
+          ];
+
+          extraMarkers.forEach(m => {
+            L.marker([m.lat, m.lng], { icon: rmutlIcon })
+              .bindPopup(m.popup)
+              .addTo(facultyLayer);  // ผูกกับ layer คณะ
+          });
+
+          return facultyLayer;
         } catch (error) {
           console.error('ข้อผิดพลาดในการดึง GeoJSON คณะและวิทยาลัย:', error.message);
           toast.error(`ไม่สามารถโหลดข้อมูลคณะและวิทยาลัยได้: ${error.message}`, { autoClose: 5000 });
@@ -288,7 +367,8 @@ const InteractiveMap = () => {
       { id: 'greenArea', name: 'พื้นที่สีเขียว', icon: <FaMapMarkerAlt className="mr-2 text-green-600" /> },
       { id: 'buildings', name: 'พื้นที่สิ่งปลูกสร้าง', icon: <FaBuilding className="mr-2 text-green-600" /> },
       { id: 'roads', name: 'พื้นที่ถนน', icon: <FaRoad className="mr-2 text-green-600" /> },
-      { id: 'waterBody', name: 'พื้นที่แหล่งน้ำ', icon: <FaWater className="mr-2 text-green-600" /> },
+      { id: 'waterBody', name: 'พื้นที่แหล่งน้ำ', icon: <IoIosWater className="mr-2 text-green-600" /> },
+      { id: 'Demonstration plot', name: 'แปลงสาธิต', icon: <FaWater className="mr-2 text-green-600" /> }
     ],
     buildingsPlaces: [
       { id: 'faculties', name: 'คณะและวิทยาลัย', icon: <FaUniversity className="mr-2 text-green-600" /> },
@@ -338,11 +418,25 @@ const InteractiveMap = () => {
         .custom-popup .leaflet-popup-content-wrapper {
           background: #ffffff;
           border-radius: 8px;
-          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
           font-family: 'Prompt', sans-serif;
+          max-width: 320px;
         }
         .custom-popup .leaflet-popup-tip {
           background: #ffffff;
+        }
+        .custom-marker {
+          background: #00843D;
+          color: white;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: bold;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+          border: 2px solid white;
         }
       `}</style>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar closeOnClick />
