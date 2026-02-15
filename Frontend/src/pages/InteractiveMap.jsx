@@ -127,12 +127,20 @@ const InteractiveMap = () => {
               lng: 100.18487977177142,
               iconUrl: '/assets/images/พืชศาสตร์.jpg',
               popup: `
+#13_ปักตำแหน่งสำนักงาน
                 <div class="p-3 max-w-xs">
                   <img src="/assets/images/พืชศาสตร์.jpg" alt="สาขาพืชศาสตร์" class="w-full h-40 object-cover rounded-lg mb-3 shadow-sm" onerror="this.src='/assets/images/placeholder.jpg'">
                   <h3 class="font-bold text-xl text-gray-800 mb-1">สาขาพืชศาสตร์</h3>
                   <p class="text-sm text-gray-600 mb-3">ฝ่ายวิชาการ วิทยาเขตพิษณุโลก</p>
                   <a href="https://www.google.com/maps/dir/?api=1&destination=16.862125295303038,100.18487977177142" target="_blank" class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-[#00843D] text-white font-medium rounded-lg hover:bg-[#006633] transition shadow-md">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
+
+                <div class="p-3">
+                  <img src="/assets/images/พืชศาสตร์.jpg" alt="สาขาพืชศาสตร์" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">สาขาพืชศาสตร์</h3>
+                  <p class="text-sm text-gray-600 mb-2">ฝ่ายวิชาการ วิทยาเขตพิษณุโลก</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862125295303038,100.18487977177142" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+ main
                     นำทางด้วย Google Maps
                   </a>
                 </div>
@@ -175,6 +183,7 @@ const InteractiveMap = () => {
               lng: 100.18242070453148,
               iconUrl: '/assets/images/สาขาวิทยาศาส.jpg',
               popup: `
+ #13_ปักตำแหน่งสำนักงาน
                 <div class="p-3 max-w-xs">
                   <img src="/assets/images/สาขาวิทยาศาส.jpg" alt="คณะวิทยาศาสตร์และเทคโนโลยีการเกษตร" class="w-full h-40 object-cover rounded-lg mb-3 shadow-sm" onerror="this.src='/assets/images/placeholder.jpg'">
                   <h3 class="font-bold text-xl text-gray-800 mb-1">คณะวิทยาศาสตร์และเทคโนโลยีการเกษตร</h3>
@@ -325,11 +334,148 @@ const InteractiveMap = () => {
                   <p class="text-sm text-gray-600 mb-3">Food Science and Technology</p>
                   <a href="https://www.google.com/maps/dir/?api=1&destination=16.861042361470503,100.18245639018853" target="_blank" class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-[#00843D] text-white font-medium rounded-lg hover:bg-[#006633] transition shadow-md">
                     <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
+
+                <div class="p-3">
+                  <img src="/assets/images/สาขาวิทยาศาส.jpg" alt="ฝ่ายวิชาการ" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">คณะวิทยาศาสตร์และเทคโนโลยีการเกษตร</h3>
+                  <p class="text-sm text-gray-600 mb-2">ฝ่ายวิชาการ วิทยาเขตพิษณุโลก</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862125295303038,100.18487977177142" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+ main
                     นำทางด้วย Google Maps
                   </a>
                 </div>
               `
             },
+ #13_ปักตำแหน่งสำนักงาน
+
+            {
+              lat: 16.86308128763508, 
+              lng: 100.18692661412354,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/สาขาประมง.jpg" alt="ทางเข้าฟร์ามปลา" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">ทางเข้าฟร์ามปลา</h3>
+                  <p class="text-sm text-gray-600 mb-2">ทางเข้า ประมง</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862591611196265,100.18715885215336" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            {
+              lat: 16.86127421996134,  
+              lng: 100.18201663492415,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/สาขาวิชาเทโนโลยีคอมพิวเตอร์.jpg" alt="ทางเข้าฟร์ามปลา" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">สาขาวิชาเทโนโลยีคอมพิวเตอร์</h3>
+                  <p class="text-sm text-gray-600 mb-2">ตึกคอม</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862591611196265,100.18715885215336" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            {
+              lat: 16.861800348704413,   
+              lng: 100.18178066213814,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/อาคารเรียนรวม.jpg" alt="ทางเข้าฟร์ามปลา" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">อาคารเรียนรวม</h3>
+                  <p class="text-sm text-gray-600 mb-2">ตึกคอม</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862591611196265,100.18715885215336" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            {
+              lat: 16.8617237234707,    
+              lng: 100.18081112316833,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/82073fe0-de82-4efa-a2c7-b09d29dabe93.jpg" alt="ทางเข้าฟร์ามปลา" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">อาคารเรียนรวม</h3>
+                  <p class="text-sm text-gray-600 mb-2">ตึก 14</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862591611196265,100.18715885215336" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            {
+              lat: 16.86352000024014,       
+              lng: 100.18251160480152,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/590e7e1b-6c34-471f-a8ef-2d19788672ea.jpg" alt="ทางเข้าฟร์ามปลา" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">สัตว์ศาสตร์</h3>
+                  <p class="text-sm text-gray-600 mb-2">ป้ายสัตว์ศาสตร์</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862591611196265,100.18715885215336" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            {
+              lat: 16.863000489298784,       
+              lng: 100.18235180471662,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/คณะวิศวะ.jpg" alt="ทางเข้าฟร์ามปลา" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">คณะวิศวะ</h3>
+                  <p class="text-sm text-gray-600 mb-2">ป้ายคณะวิศวะ</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862591611196265,100.18715885215336" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            {
+              lat: 16.862531950885703,        
+              lng: 100.18149461277717,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/94d88aaf-d62c-44c0-a650-8a5b916a4428.jpg" alt="ทางเข้าฟร์ามปลา" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">เครื่องจักรกลเกษตร</h3>
+                  <p class="text-sm text-gray-600 mb-2">ป้ายประตูทางเข้า</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862591611196265,100.18715885215336" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+             {
+              lat: 16.861047640487723,         
+              lng: 100.18160565375868,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/7e2f7b4e-b7c4-4159-9a2f-084c52afea74.jpg" alt="ทางเข้าฟร์ามปลา" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">คณะบิหารธุระกิจและศิลปะศาสตร์</h3>
+                  <p class="text-sm text-gray-600 mb-2">ตึกบิหารธุระกิจและศิลปะศาสตร์</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862591611196265,100.18715885215336" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            {
+              lat: 16.861042361470503,          
+              lng: 100.18245639018853,
+              popup: `
+                <div class="p-3">
+                  <img src="/assets/images/09a69e5e-24d3-4d85-8e98-f2aaf72d78ce.jpg" alt="ทางเข้าฟร์ามปลา" class="w-full h-32 object-cover rounded mb-2" onerror="this.src='/assets/images/placeholder.jpg'">
+                  <h3 class="font-bold text-lg mb-1">สาขาวิชาเทคโนโลยีการอาหาร</h3>
+                  <p class="text-sm text-gray-600 mb-2">Food Science and Technology</p>
+                  <a href="https://www.google.com/maps/dir/?api=1&destination=16.862591611196265,100.18715885215336" target="_blank" class="inline-flex items-center px-4 py-2 bg-[#00843D] text-white text-sm rounded hover:bg-[#006633] transition">
+                    นำทางด้วย Google Maps
+                  </a>
+                </div>
+              `
+            },
+            // เพิ่มจุดอื่น ๆ ได้ตามต้องการ...
+ main
           ];
 
           extraMarkers.forEach(m => {
