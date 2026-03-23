@@ -8,33 +8,45 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  role      String   @default("user")
-  createdAt DateTime @default(now())
-  logs      Log[]
+  id            Int      @id @default(autoincrement())
+  username      String   @unique
+  email         String   @unique
+  password      String   // เก็บรหัสผ่านที่ hash แล้ว (อย่าเก็บ plain text!)
+  fullName      String?
+  role          Role     @default(USER)  // ROLE: USER หรือ ADMIN
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
-model Log {
-  id           Int      @id @default(autoincrement())
-  userId       Int
-  actionType   String
-  actionDetails String?
-  isSuccess    Boolean  @default(true)
-  timestamp    DateTime @default(now())
-  device       String?
-  user         User     @relation(fields: [userId], references: [id])
+enum Role {
+  USER
+  ADMIN
 }
 
-model SpatialData {
+model Building {
   id          Int      @id @default(autoincrement())
-  name        String
-  category    String
+  name        String   @unique
+  lat         Float?
+  lng         Float?
   description String?
-  group       String? 
-  wfsGetUrl   String? 
-  wfsPostUrl  String? 
+  imageUrl    String?
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rooms       Room[]
+}
+
+model Room {
+  id          Int      @id @default(autoincrement())
+  number      String
+  type        String
+  floor       Int?
+  capacity    String?
+  description String?
+  buildingId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  building    Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
 }
