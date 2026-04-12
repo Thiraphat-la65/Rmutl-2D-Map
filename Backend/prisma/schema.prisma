@@ -8,6 +8,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+#19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
 model Building {
   id          Int      @id @default(autoincrement())
   name        String   @unique
@@ -49,4 +50,48 @@ model User {
 enum Role {
   USER
   ADMIN
+
+model User {
+  id            Int      @id @default(autoincrement())
+  username      String   @unique
+  email         String   @unique
+  password      String   // เก็บรหัสผ่านที่ hash แล้ว (อย่าเก็บ plain text!)
+  fullName      String?
+  role          Role     @default(USER)  // ROLE: USER หรือ ADMIN
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Building {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  lat         Float?
+  lng         Float?
+  description String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rooms       Room[]
+}
+
+model Room {
+  id          Int      @id @default(autoincrement())
+  number      String
+  type        String
+  floor       Int?
+  capacity    String?
+  description String?
+  buildingId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  building    Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+ main
 }
