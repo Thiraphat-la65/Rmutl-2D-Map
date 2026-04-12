@@ -1,3 +1,4 @@
+// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
@@ -6,6 +7,49 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+#19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+model Building {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  lat         Float?
+  lng         Float?
+  description String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rooms       Room[]
+}
+
+model Room {
+  id          Int      @id @default(autoincrement())
+  roomNumber  String   // เลขห้อง
+  type        String   // ประเภทห้อง
+  floor       Int?     // ชั้น
+  description String? 
+  buildingId  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  building    Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  username    String   @unique
+  email       String   @unique
+  password    String
+  fullName    String?
+  role        Role     @default(USER)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum Role {
+  USER
+  ADMIN
 
 model User {
   id            Int      @id @default(autoincrement())
@@ -49,4 +93,5 @@ model Room {
   updatedAt   DateTime @updatedAt
 
   building    Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+ main
 }

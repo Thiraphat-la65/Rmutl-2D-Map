@@ -25,7 +25,6 @@ const InteractiveMap = () => {
     blueRoute: false,
     parking: false,
     faculties: false,
-    offices: false,
     Factory: false,
     atms: false,
     banks: false,
@@ -41,8 +40,71 @@ const InteractiveMap = () => {
     safeZones: false,
   });
   const layerRefs = useRef({});
+
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState('dataLayers');
+  const [activeSection, setActiveSection] = useState('buildingsPlaces');
+
+  // ฟังก์ชันดึงข้อมูลอาคาร
+  const fetchBuildingRooms = async (buildingName, buildingTitle, description, imageName, defaultLat, defaultLng) => {
+    try {
+      const response = await fetch(`http://localhost:3001/api/rooms?buildingName=${encodeURIComponent(buildingName)}`);
+      if (!response.ok) throw new Error(`ไม่สามารถดึงข้อมูล ${buildingName}`);
+
+      const rooms = await response.json();
+      const layer = L.layerGroup();
+
+      rooms.forEach((room) => {
+        const lat = room.building?.lat || defaultLat;
+        const lng = room.building?.lng || defaultLng;
+
+        const popupContent = `
+          <div class="p-4 max-w-sm">
+            <img src="/assets/images/${imageName}" 
+                 alt="${buildingTitle}" 
+                 class="w-full h-52 object-cover rounded-xl mb-4" 
+                 onerror="this.src='/assets/images/placeholder.jpg'">
+            <h3 class="font-bold text-2xl text-gray-800 mb-1">${buildingTitle}</h3>
+            <p class="text-gray-600 mb-4">${description}</p>
+            
+            <div class="text-sm text-gray-500 mb-4">
+              ห้อง ${room.roomNumber || 'N/A'} • ชั้น ${room.floor || '-'} • ${room.type || 'ไม่ระบุ'}
+            </div>
+
+            <div class="flex gap-3">
+              <a href="https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}" 
+                 target="_blank" 
+                 class="flex-1 py-3 text-center bg-[#00843D] text-white rounded-xl hover:bg-[#006633]">
+                นำทาง
+              </a>
+              <!-- แก้ตรงนี้สำคัญมาก -->
+              <a href="/detail/${encodeURIComponent(room.roomNumber)}" 
+                 class="flex-1 py-3 text-center bg-blue-600 text-white rounded-xl hover:bg-blue-700">
+                รายละเอียด
+              </a>
+            </div>
+          </div>
+        `;
+
+        const customIcon = L.icon({
+          iconUrl: '/assets/images/marker-building.png',
+          iconSize: [52, 52],
+          iconAnchor: [26, 52],
+          popupAnchor: [0, -52],
+          className: 'custom-marker-icon'
+        });
+
+        L.marker([lat, lng], { icon: customIcon })
+          .bindPopup(popupContent, { maxWidth: 380 })
+          .addTo(layer);
+      });
+
+      return layer;
+    } catch (error) {
+      console.error(`ดึงข้อมูล ${buildingName} ล้มเหลว:`, error);
+      toast.error(`ไม่สามารถโหลดข้อมูล ${buildingName}`);
+      return L.layerGroup();
+    }
+  };
 
   useEffect(() => {
     if (!mapRef.current && mapContainerRef.current) {
@@ -54,21 +116,24 @@ const InteractiveMap = () => {
 
       L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         maxZoom: 19,
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+        attribution: 'Tiles &copy; Esri',
       }).addTo(mapRef.current);
 
       L.control.zoom({ position: 'bottomright' }).addTo(mapRef.current);
 
       const wmsUrl = 'http://geonode.gistnu.nu.ac.th/geoserver/wms';
 
-      const createWmsLayer = (layerName, popupText) => {
-        const layer = L.tileLayer.wms(wmsUrl, {
+      const createWmsLayer = (layerName, popupText) =>
+        L.tileLayer.wms(wmsUrl, {
           layers: layerName,
           format: 'image/png',
           transparent: true,
           version: '1.1.0',
           opacity: 0.7,
         }).bindPopup(popupText);
+#19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+
+=======
         layer.on('load', () => console.log(`${layerName} เลเยอร์โหลดสำเร็จ`));
         layer.on('error', () => {
           console.error(`${layerName} เลเยอร์โหลดไม่สำเร็จ`);
@@ -458,14 +523,8 @@ const InteractiveMap = () => {
               .bindPopup(m.popup)
               .addTo(officeLayer);
           });
+main
 
-          return officeLayer;
-        } catch (error) {
-          console.error('ข้อผิดพลาดในการดึง GeoJSON สำนักงาน:', error.message);
-          toast.error(`ไม่สามารถโหลดข้อมูลสำนักงานได้: ${error.message}`, { autoClose: 5000 });
-          return createWmsLayer('nu_offices', 'สำนักงาน');
-        }
-      };
       const fetchUniversityGates = () => {
         const gateLayer = L.layerGroup();
 
@@ -483,7 +542,6 @@ const InteractiveMap = () => {
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                   นำทางด้วย Google Maps
                 </a>
-              </div>
             `
           },
 
@@ -524,7 +582,6 @@ const InteractiveMap = () => {
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                   นำทางด้วย Google Maps
                 </a>
-              </div>
             `
           },
           {
@@ -540,7 +597,6 @@ const InteractiveMap = () => {
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                   นำทางด้วย Google Maps
                 </a>
-              </div>
             `
           },
           {
@@ -635,6 +691,11 @@ const InteractiveMap = () => {
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                   นำทางด้วย Google Maps
                 </a>
+                <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
               </div>
             `
           },
@@ -651,6 +712,11 @@ const InteractiveMap = () => {
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                   นำทางด้วย Google Maps
                 </a>
+                <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
               </div>
             `
           },
@@ -746,6 +812,7 @@ const InteractiveMap = () => {
             lat: 16.863128053554888,
             lng: 100.18258194512194,
             iconUrl: '/assets/images/สนามฟุตบอล.jpg',
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
             popup: `
               <div class="p-3 max-w-xs">
                 <img src="/assets/images/สนามฟุตบอล.jpg" alt="สนามบอลเล่" class="w-full h-40 object-cover rounded-lg mb-3 shadow-sm" onerror="this.src='/assets/images/placeholder.jpg'">
@@ -780,6 +847,42 @@ const InteractiveMap = () => {
             iconUrl: '/assets/images/สนามฟุตบอล.jpg',
             popup: `
               <div class="p-3 max-w-xs">
+=======
+            popup: `
+              <div class="p-3 max-w-xs">
+                <img src="/assets/images/สนามฟุตบอล.jpg" alt="สนามบอลเล่" class="w-full h-40 object-cover rounded-lg mb-3 shadow-sm" onerror="this.src='/assets/images/placeholder.jpg'">
+                <h3 class="font-bold text-xl text-gray-800 mb-1">สนามบอลเล่</h3>
+                <p class="text-sm text-gray-600 mb-3">สนามมาตรฐาน 2 สนาม เปิดฟรีสำหรับนักศึกษา</p>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=16.8645,100.1865" target="_blank" class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-[#77DD77] text-white font-medium rounded-lg hover:bg-[#006633] transition shadow-md">
+                  <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
+                  นำทางด้วย Google Maps
+                </a>
+              </div>
+            `
+          },
+          {
+            lat: 16.86223477886746,
+            lng: 100.182227893528,
+            iconUrl: '/assets/images/สนามฟุตบอล.jpg',
+            popup: `
+              <div class="p-3 max-w-xs">
+                <img src="/assets/images/สนามฟุตบอล.jpg" alt="สนามฟุตซอล" class="w-full h-40 object-cover rounded-lg mb-3 shadow-sm" onerror="this.src='/assets/images/placeholder.jpg'">
+                <h3 class="font-bold text-xl text-gray-800 mb-1">สนามฟุตซอล</h3>
+                <p class="text-sm text-gray-600 mb-3">สนามมาตรฐาน เปิดฟรีสำหรับนักศึกษา</p>
+                <a href="https://www.google.com/maps/dir/?api=1&destination=16.8645,100.1865" target="_blank" class="inline-flex items-center justify-center w-full px-4 py-2.5 bg-[#77DD77] text-white font-medium rounded-lg hover:bg-[#006633] transition shadow-md">
+                  <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
+                  นำทางด้วย Google Maps
+                </a>
+              </div>
+            `
+          },
+          {
+            lat: 16.863332189065353,
+            lng: 100.18697553875731,
+            iconUrl: '/assets/images/สนามฟุตบอล.jpg',
+            popup: `
+              <div class="p-3 max-w-xs">
+main
                 <img src="/assets/images/สนามฟุตบอล.jpg" alt="สนามเซปะตะกร้อ" class="w-full h-40 object-cover rounded-lg mb-3 shadow-sm" onerror="this.src='/assets/images/placeholder.jpg'">
                 <h3 class="font-bold text-xl text-gray-800 mb-1">สนามเซปะตะกร้อ</h3>
                 <p class="text-sm text-gray-600 mb-3">สนามมาตรฐาน เปิดฟรีสำหรับนักศึกษา</p>
@@ -842,6 +945,14 @@ const InteractiveMap = () => {
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                   นำทางด้วย Google Maps
                 </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+                <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
               </div>
             `
           },
@@ -883,6 +994,14 @@ const InteractiveMap = () => {
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                   นำทางด้วย Google Maps
                 </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+                <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
               </div>
             `
           },
@@ -899,6 +1018,14 @@ const InteractiveMap = () => {
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                   นำทางด้วย Google Maps
                 </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+                <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
               </div>
             `
           },
@@ -915,6 +1042,14 @@ const InteractiveMap = () => {
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                   นำทางด้วย Google Maps
                 </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+                <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
               </div>
             `
           },
@@ -931,6 +1066,14 @@ const InteractiveMap = () => {
                   <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
                   นำทางด้วย Google Maps
                 </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+                <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
               </div>
             `
           },
@@ -971,6 +1114,14 @@ const InteractiveMap = () => {
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
             นำทางด้วย Google Maps
           </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+          <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
         </div>
       `
           },
@@ -1009,6 +1160,14 @@ const InteractiveMap = () => {
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
             นำทางด้วย Google Maps
           </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+          <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
         </div>
       `
           },
@@ -1050,6 +1209,14 @@ const InteractiveMap = () => {
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
             นำทางด้วย Google Maps
           </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+          <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
         </div>
       `
           },
@@ -1066,6 +1233,13 @@ const InteractiveMap = () => {
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
             นำทางด้วย Google Maps
           </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+          <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+ main
         </div>
       `
           },
@@ -1082,6 +1256,14 @@ const InteractiveMap = () => {
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
             นำทางด้วย Google Maps
           </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+          <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
         </div>
       `
           },
@@ -1098,6 +1280,14 @@ const InteractiveMap = () => {
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
             นำทางด้วย Google Maps
           </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+          <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
         </div>
       `
           },
@@ -1139,6 +1329,14 @@ const InteractiveMap = () => {
             <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5S10.62 6.5 12 6.5 14.5 7.62 14.5 9s-1.12 2.5-2.5 2.5z"/></svg>
             นำทางด้วย Google Maps
           </a>
+ #19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+          <button 
+                  onclick="alert('หน้ารายละเอียดของสถานที่นี้กำลังพัฒนาอยู่ครับ จะแจ้งให้ทราบเมื่อพร้อมใช้งาน')"
+                  class="block w-full px-4 py-2.5 text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+                  รายละเอียด
+                  </button>
+
+ main
         </div>
       `
           },
@@ -1170,7 +1368,6 @@ const InteractiveMap = () => {
         universityGate: createWmsLayer('nu_university_gate', 'ประตูมหาวิทยาลัย'),
         parking: createWmsLayer('nu_parking', 'ที่จอดรถ'),
         faculties: null,
-        offices: null,
         Factory: createWmsLayer('nu_Factorys', 'โรงงาน'),
         atms: createWmsLayer('nu_atms', 'ตู้กดเงิน'),
         banks: createWmsLayer('nu_banks', 'ธนาคาร'),
@@ -1186,23 +1383,22 @@ const InteractiveMap = () => {
         safeZones: createWmsLayer('nu_safe_zones', 'โซนปลอดภัย'),
       };
 
-      fetchFacultiesGeoJSON().then((facultyLayer) => {
-        if (facultyLayer) {
-          layerRefs.current.faculties = facultyLayer;
-          if (layers.faculties) {
-            facultyLayer.addTo(mapRef.current);
-          }
+      Promise.all([
+        fetchBuildingRooms('อาคาร 13', 'อาคาร 13', 'อาคารสาขาวิชาประมง', 'อาคาร 13.jpg', 16.86396506882284, 100.18763199968545),
+        fetchBuildingRooms('อาคาร 16', 'อาคาร 16', 'อาคารคณะวิทยาศาสตร์และเทคโนโลยีการเกษตร', 'อาคาร 16.jpg', 16.862553329722466, 100.18717690522605)
+      ]).then(([layer13, layer16]) => {
+        // รวม marker ทั้งสองอาคารเข้าเลเยอร์เดียว
+        const combinedLayer = L.layerGroup();
+        layer13.eachLayer(marker => marker.addTo(combinedLayer));
+        layer16.eachLayer(marker => marker.addTo(combinedLayer));
+
+        layerRefs.current.faculties = combinedLayer;
+
+        if (layers.faculties) {
+          combinedLayer.addTo(mapRef.current);
         }
       });
 
-      fetchOfficesGeoJSON().then((officeLayer) => {
-        if (officeLayer) {
-          layerRefs.current.offices = officeLayer;
-          if (layers.offices) {
-            officeLayer.addTo(mapRef.current);
-          }
-        }
-      });
 
       const gateLayer = fetchUniversityGates();
       layerRefs.current.universityGate = gateLayer;
@@ -1309,7 +1505,6 @@ const InteractiveMap = () => {
       blueRoute: false,
       parking: false,
       faculties: false,
-      offices: false,
       Factory: false,
       atms: false,
       banks: false,
@@ -1328,7 +1523,6 @@ const InteractiveMap = () => {
   };
 
   const sections = [
-    { id: 'dataLayers', name: 'ชั้นข้อมูล', icon: <FaLayerGroup className="text-xl" /> },
     { id: 'buildingsPlaces', name: 'อาคารสถานที่', icon: <FaBuilding className="text-xl" /> },
     { id: 'transportation', name: 'การเดินทาง', icon: <FaMapSigns className="text-xl" /> },
     { id: 'financial', name: 'ธุรกรรมทางการเงิน', icon: <FaMoneyCheckAlt className="text-xl" /> },
@@ -1341,16 +1535,9 @@ const InteractiveMap = () => {
   ];
 
   const layerGroups = {
-    dataLayers: [
-      { id: 'greenArea', name: 'พื้นที่สีเขียว', icon: <FaMapMarkerAlt className="mr-2 text-green-600" /> },
-      { id: 'buildings', name: 'พื้นที่สิ่งปลูกสร้าง', icon: <FaBuilding className="mr-2 text-green-600" /> },
-      { id: 'roads', name: 'พื้นที่ถนน', icon: <FaRoad className="mr-2 text-green-600" /> },
-      { id: 'waterBody', name: 'พื้นที่แหล่งน้ำ', icon: <IoIosWater className="mr-2 text-green-600" /> },
-      { id: 'Demonstration plot', name: 'แปลงสาธิต', icon: <FaWater className="mr-2 text-green-600" /> }
-    ],
+
     buildingsPlaces: [
       { id: 'faculties', name: 'คณะและวิทยาลัย', icon: <FaUniversity className="mr-2 text-green-600" /> },
-      { id: 'offices', name: 'สำนักงาน', icon: <FaBriefcase className="mr-2 text-green-600" /> },
       { id: 'Factory', name: 'โรงงาน', icon: <MdFactory className="mr-2 text-green-600" /> },
 
     ],

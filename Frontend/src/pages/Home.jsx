@@ -20,7 +20,7 @@ const Home = () => {
           preload="auto"
           className="absolute inset-0 w-full h-full object-cover z-0"
         >
-          <source src="/assets/videos/rmutl-video.mp4" type="video/mp4" />
+          <source src="/assets/videos/วิดีโอปกโปรเจ็ก.mp4" type="video/mp4" />
           <div className="text-white text-center p-10 bg-gray-800">
             วิดีโอไม่สามารถเล่นได้
           </div>
