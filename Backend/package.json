@@ -33,6 +33,7 @@
     "@types/jest": "^29.5.14",
     "@types/supertest": "^6.0.3",
     "jest": "^30.0.0",
+    "nodemon": "^3.1.10",
     "prisma": "^6.15.0",
     "supertest": "^7.1.1"
   },
@@ -40,4 +41,5 @@
     "test": "tests"
   },
   "type": "commonjs"
+  
 }
