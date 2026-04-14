@@ -1,5 +1,4 @@
 // prisma/seed.js
-#19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcrypt');
 
@@ -10,7 +9,7 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-#19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+
   console.log('🚀 เริ่มการ seed ข้อมูล RMUTL Map...');
 
   try {
@@ -259,7 +258,7 @@ main
 
 main()
   .catch((e) => {
-#19_สร้างฐานข้อมูลอาคาร13กับอาคาร16
+
     console.error(e);
     process.exit(1);
 
@@ -271,3 +270,4 @@ main()
     console.log('ปิดการเชื่อมต่อ Prisma');
 main
   });
+}
